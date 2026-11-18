@@ -1,1 +1,20 @@
+graph TD
+    subgraph User & Interface Layer
+        A[User Input / Guess] -->|Raw String| B[Input Guardrail & Parser]
+        G[Streamlit UI & Session State] -->|Reruns & State Management| A
+    end
 
+    subgraph Core AI & Logic System
+        B -->|Validated Integer / Error| C{Is Input Valid?}
+        C -->|Valid Range| D[Agentic AI Coach & RAG Retriever]
+        C -->|Invalid Input| E[Error Handler & Guardrail Message]
+        
+        D -->|Retrieves Strategy Context & Distance Ratio| F[Evaluation Engine / check_guess]
+        F -->|Determines Outcome: Win / Too High / Too Low| G
+        E -->|Displays Safe Error Feedback| G
+    end
+
+    subgraph Reliability & Verification Layer
+        H[Human Player / Reviewer] -->|Interactive Game Testing| G
+        I[Automated Test Suite / pytest] -->|Validates Edge Cases & AI Coaching Hints| F
+    end
