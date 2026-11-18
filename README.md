@@ -93,6 +93,12 @@ Working on this project showed me that building an applied AI system is less abo
 
 ---
 
+## Portfolio Artifact & Professional Summary
+
+- **GitHub Repository:** [applied-ai-system-final](https://github.com/suhanapatodi/applied-ai-system-final)
+- **What This Project Says About Me as an AI Engineer:** 
+  Building this project demonstrates my ability to evolve basic student code into a robust, production-ready applied AI system. It highlights my practical competence in designing modular architecture, implementing defensive input guardrails, engineering agentic AI coaches with RAG-lite retrieval, and verifying reliability through automated test suites (`pytest`). I prioritize clean separation of concerns, ensuring that AI reasoning features are strictly bounded by robust verification and error handling.
+
 ### Commit & Push Part 3
 Save `README.md` (`Cmd + S`) and run:
 
@@ -114,3 +120,4 @@ collected 6 items
 tests/test_game_logic.py . . . . . .                              [100%]
 
 =========================== 6 passed in 0.09s ===========================
+
