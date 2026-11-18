@@ -69,6 +69,38 @@ What Didn't: Initial testing revealed that float strings like "50.0" failed dire
 
 What I Learned: Reliable AI features depend heavily on deterministic input validation and clear state separation before any reasoning or hint generation happens.
 
+## Reliability and Evaluation
+
+To rigorously test and measure system reliability, the application utilizes automated `pytest` unit tests, input parsing guardrails, and dynamic confidence scoring within the AI agent.
+
+### Testing Summary
+6 out of 6 automated unit tests passed successfully; the system successfully validated range boundaries, handled edge cases like empty strings or float conversions, and maintained 1.0 confidence scoring during agentic target acquisition.
+
+### Structured Evaluation Table
+
+| Test Input | Evaluation Criteria | Result |
+| :--- | :--- | :--- |
+| `check_guess(50, 50)` | Correctly identifies winning match | Pass |
+| `check_guess(60, 50)` | Identifies guess is too high and provides hint | Pass |
+| `parse_guess("", 1, 100)` | Handles empty input gracefully with safe error message | Pass |
+| `parse_guess("150", 1, 100)` | Rejects out-of-bounds integer correctly via guardrail | Pass |
+| `parse_guess("50.0", 1, 100)` | Safely parses decimal string representation | Pass |
+| `generate_ai_coach_hint([20, 80, 50], 50, 1, 100)` | Agent retrieves context and confirms target accuracy with 1.0 confidence | Pass |
+
+### Reproducible Pytest Execution Output
+```bash
+(.venv) suhanapatodi@Mac applied-ai-system-final % python -m pytest
+========================== test session starts ==========================
+platform darwin -- Python 3.13.15, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/suhanapatodi/Documents/GitHub/applied-ai-system-final
+plugins: anyio-4.15.1
+collected 6 items                                                         
+
+tests/test_game_logic.py . . . . . .                              [100%]
+
+=========================== 6 passed in 0.09s ===========================
+
+
 **Reflection**
 Working on this project showed me that building an applied AI system is less about adding complex features and more about making sure every layer handles unexpected inputs safely. Combining structured guardrails with dynamic strategy retrieval taught me how to keep AI behavior predictable and easy to debug. 
 
