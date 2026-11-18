@@ -1,74 +1,83 @@
-# 🎮 Game Glitch Investigator: The Impossible Guesser
+# Game Glitch Investigator Pro: Agentic AI Strategy & Reliability Suite
 
-## 🚨 The Situation
+## Project Overview & Base Project
+This project extends the **Game Glitch Investigator** (from CodePath AI110 Module 1) into a complete applied AI system. The original base project was a Streamlit number-guessing game that suffered from inverted hint feedback, unvalidated user inputs, and unhandled runtime crashes. This upgraded version introduces an **Agentic AI Strategy Coach with RAG-lite context retrieval**, input validation guardrails, and modular state management to deliver reliable gameplay.
 
-You asked an AI to build a simple "Number Guessing Game" using Streamlit.
-It wrote the code, ran away, and now the game is unplayable. 
+---
 
-- You can't win.
-- The hints lie to you.
-- The secret number seems to have commitment issues.
+## Architecture Overview
+The system architecture (`diagrams/architecture.mmd`) is organized into three layers:
+1. **User and Interface Layer:** Captures raw string inputs through Streamlit widgets and manages reactive session state across script reruns.
+2. **Core AI and Logic System:** Routes input through a defensive type/range guardrail (`parse_guess`), queries the **Agentic AI Coach & RAG Retriever** to retrieve distance-based strategy rules, and determines game outcomes via `check_guess`.
+3. **Reliability and Verification Layer:** Combines human-in-the-loop testing with automated `pytest` verification to check edge cases and agent responses.
 
-## 🛠️ Setup
+---
 
-1. Install dependencies: `pip install -r requirements.txt`
-2. Run the broken app: `python -m streamlit run app.py`
+## Setup Instructions
 
-## 🕵️‍♂️ Your Mission
+1. **Clone the Repository:**
+   ```bash
+   git clone [https://github.com/suhanapatodi/applied-ai-system-final.git](https://github.com/suhanapatodi/applied-ai-system-final.git)
+   cd applied-ai-system-final
+Create and Activate a Virtual Environment:
 
-1. **Play the game.** Open the "Developer Debug Info" tab in the app to see the secret number. Try to win.
-2. **Find the State Bug.** Why does the secret number change every time you click "Submit"? Ask ChatGPT: *"How do I keep a variable from resetting in Streamlit when I click a button?"*
-3. **Fix the Logic.** The hints ("Higher/Lower") are wrong. Fix them.
-4. **Refactor & Test.** - Move the logic into `logic_utils.py`.
-   - Run `pytest` in your terminal.
-   - Keep fixing until all tests pass!
+Bash
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .\.venv\Scripts\Activate.ps1
+Install Dependencies:
 
-## 📝 Document Your Experience
+Bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+Run the Application:
 
-**Game Purpose:**
-  The Game Glitch Investigator is an interactive Streamlit-based number guessing game. Players select a difficulty level (which sets the valid guessing range) and attempt to guess a randomly generated secret number. The game provides real-time feedback after each guess (indicating whether the guess is too high, too low, or correct) and tracks player scores based on performance and attempt counts.
+Bash
+streamlit run app.py
+Sample Interactions
+Example 1: Winning Guess & AI Coach Confirmation
+Input: User enters 50 on Normal difficulty when the secret number is 50.
 
-**Bugs Found:**
-  1. **Inverted Feedback Logic:** The comparison logic in `check_guess` was inverted, returning "Too High" when a guess was lower than the secret number and vice-versa.
-  2. **Unimplemented Function / Refactoring Needed:** The core game logic `check_guess` in `logic_utils.py` raised a `NotImplementedError` and needed to be refactored out of `app.py`.
-  3. **Module Import Errors in Testing:** Running standard `pytest` commands threw `ModuleNotFoundError: No module named 'logic_utils'` because the root directory was not included in Python's search path.
+AI Output:
 
-**Fixes Applied:**
-  1. Refactored `check_guess` into `logic_utils.py`, replacing the `NotImplementedError` with functional comparison logic.
-  2. Corrected the conditional logic in `check_guess(guess, secret)` so that `guess > secret` properly yields `"Too High"` and `guess < secret` yields `"Too Low"`.
-  3. Utilized `python -m pytest` to execute unit tests within the active virtual environment, ensuring proper module resolution.
+Plaintext
+🤖 AI Strategy Coach: AI Coach: Target acquired! Optimal solution reached. (Confidence: 1.0)
+Win: Congratulations! You guessed the correct number! Total attempts: 1
+Example 2: Out-of-Bounds Input Guardrail
+Input: User enters 150 on Normal difficulty (valid range: 1–100).
 
-## 📸 Demo Walkthrough
+AI Output:
 
-Describe your fixed game in numbered steps so a reader can follow along without watching a video:
+Plaintext
+Guess must be between 1 and 100.
+Example 3: Dynamic RAG-Lite Strategy Guidance
+Input: User guesses 20 on Normal difficulty when the secret number is 50.
 
-1. User selects "Normal" difficulty (Number range: 1–100) and starts a new game.
-2. User enters a initial guess of `50`.
-3. Game evaluates the guess using `logic_utils.check_guess()` and displays `"Too Low! Try again."`
-4. The score updates based on the attempt count.
-5. User enters a higher guess of `75`.
-6. Game returns `"Too High! Try again."`
-7. User enters `62`.
-8. Game returns `"Win: Congratulations! You guessed the correct number!"`
-9. Final score is calculated, displayed, and recorded in the game session.
+AI Output:
 
-**Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
+Plaintext
+🤖 AI Strategy Coach: AI Coach Analysis: 20 was too low. Strategy Rule: You are far off. Consider utilizing a binary search midpoint strategy to cut the search space in half. (Confidence: 0.95)
+Design Decisions & Trade-offs
+Modular Logic Separation: Isolating the AI strategy coach, input parser, and game rules inside logic_utils.py (separate from app.py) allowed direct unit testing without launching the Streamlit UI.
 
-## 🧪 Test Results
+Defensive Return Tuples: Returning explicit (ok, value, error) tuples from parse_guess instead of raising raw exceptions prevents UI crashes when users submit empty strings or non-numeric text, at the trade-off of slightly more verbose conditional checks in app.py.
 
-```
-# Paste your pytest output here, e.g.:
-========================== test session starts ==========================
-platform darwin -- Python 3.13.15, pytest-9.1.1, pluggy-1.6.0
-rootdir: /Users/suhanapatodi/Documents/GitHub/ai110-module1show-gameglitchinvestigator-starter
-plugins: anyio-4.15.1
-collected 6 items                                                       
+Testing Summary
+What Worked: Separating core logic made automated testing straightforward, and defensive guardrails caught empty strings, non-numeric inputs, and out-of-bounds numbers reliably.
 
-tests/test_game_logic.py ......                                   [100%]
+What Didn't: Initial testing revealed that float strings like "50.0" failed direct int() conversion, requiring an explicit float-to-integer parsing fallback.
 
-=========================== 6 passed in 0.03s ===========================
-(.venv) suhanapatodi@Mac ai110-module1show-gameglitchinvestigator-starter
+What I Learned: Reliable AI features depend heavily on deterministic input validation and clear state separation before any reasoning or hint generation happens.
 
-## 🚀 Stretch Features
+Reflection
+Working on this project showed me that building an applied AI system is less about adding complex features and more about making sure every layer handles unexpected inputs safely. Combining structured guardrails with dynamic strategy retrieval taught me how to keep AI behavior predictable and easy to debug. 
 
-- [ ] [If you choose to complete Challenge 4, describe the Enhanced UI changes here — a screenshot is optional]
+
+---
+
+### Commit & Push Part 3
+Save `README.md` (`Cmd + S`) and run:
+
+```bash
+git add README.md
+git commit -m "docs: complete Part 3 README documentation"
+git push origin main
