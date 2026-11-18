@@ -19,56 +19,57 @@ The system architecture (`diagrams/architecture.mmd`) is organized into three la
    ```bash
    git clone [https://github.com/suhanapatodi/applied-ai-system-final.git](https://github.com/suhanapatodi/applied-ai-system-final.git)
    cd applied-ai-system-final
-Create and Activate a Virtual Environment:
+   
+2. **Create and Activate a Virtual Environment:**
 
 Bash
 python3 -m venv .venv
 source .venv/bin/activate  # On Windows: .\.venv\Scripts\Activate.ps1
-Install Dependencies:
+
+3. **Install Dependencies:**
 
 Bash
 python -m pip install --upgrade pip
 pip install -r requirements.txt
-Run the Application:
+
+4. **Run the Application:**
 
 Bash
 streamlit run app.py
-Sample Interactions
+
+**Sample Interactions**
 Example 1: Winning Guess & AI Coach Confirmation
 Input: User enters 50 on Normal difficulty when the secret number is 50.
-
 AI Output:
-
 Plaintext
 🤖 AI Strategy Coach: AI Coach: Target acquired! Optimal solution reached. (Confidence: 1.0)
 Win: Congratulations! You guessed the correct number! Total attempts: 1
+
 Example 2: Out-of-Bounds Input Guardrail
 Input: User enters 150 on Normal difficulty (valid range: 1–100).
-
 AI Output:
-
 Plaintext
 Guess must be between 1 and 100.
+
 Example 3: Dynamic RAG-Lite Strategy Guidance
 Input: User guesses 20 on Normal difficulty when the secret number is 50.
-
 AI Output:
-
 Plaintext
 🤖 AI Strategy Coach: AI Coach Analysis: 20 was too low. Strategy Rule: You are far off. Consider utilizing a binary search midpoint strategy to cut the search space in half. (Confidence: 0.95)
-Design Decisions & Trade-offs
+
+**Design Decisions & Trade-offs**
 Modular Logic Separation: Isolating the AI strategy coach, input parser, and game rules inside logic_utils.py (separate from app.py) allowed direct unit testing without launching the Streamlit UI.
 
 Defensive Return Tuples: Returning explicit (ok, value, error) tuples from parse_guess instead of raising raw exceptions prevents UI crashes when users submit empty strings or non-numeric text, at the trade-off of slightly more verbose conditional checks in app.py.
 
-Testing Summary
+**Testing Summary**
 What Worked: Separating core logic made automated testing straightforward, and defensive guardrails caught empty strings, non-numeric inputs, and out-of-bounds numbers reliably.
 
 What Didn't: Initial testing revealed that float strings like "50.0" failed direct int() conversion, requiring an explicit float-to-integer parsing fallback.
 
 What I Learned: Reliable AI features depend heavily on deterministic input validation and clear state separation before any reasoning or hint generation happens.
 
-Reflection
+**Reflection**
 Working on this project showed me that building an applied AI system is less about adding complex features and more about making sure every layer handles unexpected inputs safely. Combining structured guardrails with dynamic strategy retrieval taught me how to keep AI behavior predictable and easy to debug. 
 
 
