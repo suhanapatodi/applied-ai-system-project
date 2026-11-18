@@ -87,20 +87,6 @@ To rigorously test and measure system reliability, the application utilizes auto
 | `parse_guess("50.0", 1, 100)` | Safely parses decimal string representation | Pass |
 | `generate_ai_coach_hint([20, 80, 50], 50, 1, 100)` | Agent retrieves context and confirms target accuracy with 1.0 confidence | Pass |
 
-### Reproducible Pytest Execution Output
-```bash
-(.venv) suhanapatodi@Mac applied-ai-system-final % python -m pytest
-========================== test session starts ==========================
-platform darwin -- Python 3.13.15, pytest-9.1.1, pluggy-1.6.0
-rootdir: /Users/suhanapatodi/Documents/GitHub/applied-ai-system-final
-plugins: anyio-4.15.1
-collected 6 items                                                         
-
-tests/test_game_logic.py . . . . . .                              [100%]
-
-=========================== 6 passed in 0.09s ===========================
-
-
 **Reflection**
 Working on this project showed me that building an applied AI system is less about adding complex features and more about making sure every layer handles unexpected inputs safely. Combining structured guardrails with dynamic strategy retrieval taught me how to keep AI behavior predictable and easy to debug. 
 
@@ -114,3 +100,17 @@ Save `README.md` (`Cmd + S`) and run:
 git add README.md
 git commit -m "docs: complete Part 3 README documentation"
 git push origin main
+
+
+### Reproducible Pytest Execution Output
+```bash
+(.venv) suhanapatodi@Mac applied-ai-system-final % python -m pytest
+========================== test session starts ==========================
+platform darwin -- Python 3.13.15, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/suhanapatodi/Documents/GitHub/applied-ai-system-final
+plugins: anyio-4.15.1
+collected 6 items                                                         
+
+tests/test_game_logic.py . . . . . .                              [100%]
+
+=========================== 6 passed in 0.09s ===========================
